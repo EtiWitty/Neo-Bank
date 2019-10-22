@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { combineReducers } from "redux";
+import authReducer from "./authReducer";
+import errorReducer from "./errorReducer";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 //import App from './App';
@@ -15,3 +18,8 @@ ReactDOM.render(
   </ThemeProvider>,
   document.querySelector('#root'),
 );
+
+export default combineReducers({
+  auth: authReducer,
+  errors: errorReducer
+});
