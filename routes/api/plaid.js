@@ -1,5 +1,5 @@
 const express = require("express");
-const plaid = require("plaid");
+const synapse = require("synapse");
 const router = express.Router();
 const passport = require("passport");
 const moment = require("moment");
@@ -8,26 +8,26 @@ const mongoose = require("mongoose");
 const Account = require("../../models/Account");
 const User = require("../../models/User");
 
-let PLAID_CLIENT_ID;
-let PLAID_SECRET;
-let PLAID_PUBLIC_KEY;
+let SYNAPSE_CLIENT_ID;
+let SYNAPSE_SECRET;
+let SYNAPSE_PUBLIC_KEY;
 
-if (process.env.PLAID_CLIENT_ID) {
-	PLAID_CLIENT_ID = process.env.PLAID_CLIENT_ID;
-	PLAID_SECRET = process.env.PLAID_SECRET;
-	PLAID_PUBLIC_KEY = process.env.PLAID_PUBLIC_KEY;
+if (process.env.SYNAPSE_CLIENT_ID) {
+	SYNAPSE_CLIENT_ID = process.env.SYNAPSE_CLIENT_ID;
+	SYNAPSE_SECRET = process.env.SYNAPSE_SECRET;
+	SYNAPSE_PUBLIC_KEY = process.env.SYNAPSE_PUBLIC_KEY;
 } else {
 	const secrets = require("./secrets");
-	PLAID_CLIENT_ID = secrets.PLAID_CLIENT_ID;
-	PLAID_SECRET = secrets.PLAID_SECRET;
-	PLAID_PUBLIC_KEY = secrets.PLAID_PUBLIC_KEY;
+	SYNAPSE_CLIENT_ID = secrets.SYNAPSE_CLIENT_ID;
+	SYNAPSE_SECRET = secrets.SYNAPSE_SECRET;
+	SYNAPSE_PUBLIC_KEY = secrets.SYNAPSE_PUBLIC_KEY;
 }
 
-const client = new plaid.Client(
-	PLAID_CLIENT_ID,
-	PLAID_SECRET,
-	PLAID_PUBLIC_KEY,
-	plaid.environments.sandbox,
+const client = new synapse.Client(
+	SYNAPSE_CLIENT_ID,
+	SYNAPSE_SECRET,
+	SYNAPSE_PUBLIC_KEY,
+	synapse.environments.sandbox,
 	{ version:"2019-05-29" }
 );
 
@@ -35,7 +35,7 @@ var PUBLIC_TOKEN = null;
 var ACCESS_TOKEN = null;
 var ITEM_ID = null;
 
-// @route POST api/plaid/accounts/add
+// @route POST api/synapse/accounts/add
 // @desc Trades public token for access token and stores credentials in database
 // @access Private
 router.post(
@@ -74,12 +74,12 @@ router.post(
 			  		})
 			  		.catch(err => console.log(err)); // Mongo Error
 		  		})
-		.catch(err => console.log(err)); // Plaid Error
+		.catch(err => console.log(err)); // synapse Error
 	  }
 	}
   );
 
-// @route DELETE api/plaid/accounts/:id
+// @route DELETE api/synapse/accounts/:id
 // @desc Delete account with given id
 
 router.delete(
@@ -92,8 +92,8 @@ router.delete(
 	  });
 })
 	
-// @route GET api/plaid/accounts
-// @desc Get all accounts linked with plaid for a specific user
+// @route GET api/synapse/accounts
+// @desc Get all accounts linked with synapse for a specific user
 
 router.get(
 	"/accounts",
@@ -105,7 +105,7 @@ router.get(
 	}
   );
 
-// @route POST api/plaid/accounts/transactions
+// @route POST api/synapse/accounts/transactions
 // @desc Fetch transactions from past 30 days from all linked accounts
 // @access Private
 router.post(

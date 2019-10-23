@@ -15,7 +15,7 @@ class Navbar extends Component {
               className="col s5 brand-logo center black-text"
             >
               <i className="material-icons">code</i>
-              MERN
+              FinTech Mini App
             </Link>
           </div>
         </nav>
@@ -23,4 +23,5 @@ class Navbar extends Component {
     );
   }
 }
+
 export default Navbar;

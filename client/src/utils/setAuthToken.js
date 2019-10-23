@@ -1,6 +1,3 @@
-// We’ll use this to set and delete the Authorization header
-// for our axios requests depending on whether a user is logged in or not
-
 import axios from "axios";
 
 const setAuthToken = token => {
@@ -12,4 +9,5 @@ const setAuthToken = token => {
     delete axios.defaults.headers.common["Authorization"];
   }
 };
+
 export default setAuthToken;
