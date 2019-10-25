@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+
 import {
   getTransactions,
   addAccount,
@@ -11,23 +12,16 @@ import MaterialTable from "material-table"; // https://mbrn.github.io/material-t
 
 class Accounts extends Component {
   componentDidMount() {
-    const { accounts } = this.props;
-    this.props.getTransactions(accounts);
+
+
+
+
+    // const { accounts } = this.props;
+    const accounts = [];
   }
 
 // Add account
   handleOnSuccess = (token, metadata) => {
-    const { accounts } = this.props;
-  };
-
-// Delete account
-  onDeleteClick = id => {
-    const { accounts } = this.props;
-    const accountData = {
-      id: id,
-      accounts: accounts
-    };
-    this.props.deleteAccount(accountData);
   };
 
 // Logout
@@ -36,9 +30,11 @@ class Accounts extends Component {
     this.props.logoutUser();
   };
 render() {
-    const { user, accounts } = this.props;
     const transactionsLoading = false;
     const transactions = [];
+    const accounts = [];
+    const { user } = this.props.auth;
+
 let accountItems = accounts.map(account => (
       <li key={account._id} style={{ marginTop: "1rem" }}>
         <button
@@ -126,17 +122,13 @@ return (
 }
 
 Accounts.propTypes = {
-	logoutUser: PropTypes.func.isRequired,
-	getTransactions: PropTypes.func.isRequired,
-	addAccount: PropTypes.func.isRequired,
-	deleteAccount: PropTypes.func.isRequired,
-	accounts: PropTypes.array.isRequired,
-	user: PropTypes.object.isRequired
-  };
-  const mapStateToProps = state => ({
-  });
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
   
-  export default connect(
+export default connect(
 	mapStateToProps,
-	{ logoutUser, getTransactions, addAccount, deleteAccount }
-  )(Accounts);
+)(Accounts);

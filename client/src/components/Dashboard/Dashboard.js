@@ -37,7 +37,9 @@ this.props.addAccount(synapseData);
 
 render() {
     const { user } = this.props.auth;
-    const { accounts, accountsLoading } = this.props.synapse; // comes from server.js
+    // const { accounts, accountsLoading } = this.props.synapse; // comes from server.js
+    const accounts = [];
+    const accountsLoading = false;
 
 let dashboardContent;
 
@@ -94,7 +96,6 @@ Dashboard.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  synapse: state.synapse //???
 });
 
 export default connect(

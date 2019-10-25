@@ -3,8 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const moment = require("moment");
 const mongoose = require("mongoose");
-const Synapse = require('synapsenode');
-const Client = Synapse.Client;
+const SynapsePay = require("synapsepay");
 
 // Load Account and User models
 const Account = require("../../models/Account");
@@ -12,30 +11,78 @@ const User = require("../../models/User");
 
 let SYNAPSE_CLIENT_ID;
 let SYNAPSE_SECRET;
-let FINGERPRINT;
+let SYNAPSE_USER_FINGERPRINT;
+let SYNAPSE_USER_ID;
 
 if (process.env.SYNAPSE_CLIENT_ID) {
 	SYNAPSE_CLIENT_ID = process.env.SYNAPSE_CLIENT_ID;
 	SYNAPSE_SECRET = process.env.SYNAPSE_SECRET;
-	FINGERPRINT = process.env.FINGERPRINT
+	SYNAPSE_USER_FINGERPRINT = process.env.SYNAPSE_USER_FINGERPRINT
+	SYNAPSE_USER_ID = process.env.SYNAPSE_USER_ID
 } else {
 	const secrets = require("./secrets");
 	SYNAPSE_CLIENT_ID = secrets.SYNAPSE_CLIENT_ID;
 	SYNAPSE_SECRET = secrets.SYNAPSE_SECRET;
-	FINGERPRINT = secrets.FINGERPRINT
+	SYNAPSE_USER_FINGERPRINT = secrets.SYNAPSE_USER_FINGERPRINT;
+	SYNAPSE_USER_ID = secrets.SYNAPSE_USER_ID;
 }
 
-const client = new Client({
-	SYNAPSE_CLIENT_ID,
-	SYNAPSE_SECRET,
-	FINGERPRINT,
-	ip_address: '<ip_address>',
-  	isProduction: false
-});
+const { Users, Nodes, Clients, Helpers, Transactions } = SynapsePay;
 
-var CLIENT_TOKEN = null;
-var ACCESS_TOKEN = null;
-var ITEM_ID = null;
+const client = new Clients(
+  SYNAPSE_CLIENT_ID,
+  SYNAPSE_SECRET,
+  // is_production boolean determines sandbox or production endpoints used
+  false
+);
+
+let users = [];
+Users.get(
+	client,
+	{
+		ip_address: Helpers.getUserIP(),
+		page: '', //optional
+		per_page: '', //optional
+		query: '' //optional
+	},
+	function(err, usersResponse) {
+		// error or array of user objects
+		users = usersResponse.users;
+	}
+);
+
+let mainUser = null;
+let nodes = [];
+
+Users.get(
+	client,
+	{
+	_id: SYNAPSE_USER_ID,
+	fingerprint: SYNAPSE_USER_FINGERPRINT,
+	ip_address: Helpers.getUserIP(),
+	full_dehydrate: 'yes' //optional
+	},
+	function(errResp, userResponse) {
+		// error or user object
+		mainUser = userResponse;
+		console.log({mainUser});
+		Nodes.get(
+			mainUser,
+  {
+    _id: "5db23b9e8d1b7d23d812b3cf",
+    full_dehydrate: 'yes' //optional
+  },
+			function(err, nodesResponse) {
+				// error or array of node objects
+				nodes = nodesResponse;
+				console.log({nodesResponse});
+			}
+		);
+	}
+);
+
+
+
 
 // Routes will go here
 // @route POST api/synapse/accounts/add
@@ -102,11 +149,20 @@ router.get(
 	"/accounts",
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
-	  Account.find({ userId: req.user.id })
-		.then(accounts => res.json(accounts))
-		.catch(err => console.log(err));
+		res.send(users);
 	}
   );
+
+  // @route GET api/synapse/accounts
+  // @desc Get all accounts linked with synapse for a specific user
+  // @access Private
+  router.get(
+	  "/nodes",
+	  passport.authenticate("jwt", { session: false }),
+	  (req, res) => {
+		res.send(nodes);
+	  }
+	);
 
 // @route POST api/synapse/accounts/transactions
 // @desc Fetch transactions from past 30 days from all linked accounts
