@@ -26,6 +26,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "plaid": "^4.2.0",
+    "synapsenode": "^1.2.3",
     "validator": "^10.9.0"
   }
 }

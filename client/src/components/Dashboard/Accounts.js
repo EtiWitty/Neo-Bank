@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import PlaidLinkButton from "react-plaid-link-button";
 import { connect } from "react-redux";
 import {
   getTransactions,
@@ -19,12 +18,6 @@ class Accounts extends Component {
 // Add account
   handleOnSuccess = (token, metadata) => {
     const { accounts } = this.props;
-    const plaidData = {
-      public_token: token,
-      metadata: metadata,
-      accounts: accounts
-    };
-this.props.addAccount(plaidData);
   };
 
 // Delete account
@@ -44,7 +37,8 @@ this.props.addAccount(plaidData);
   };
 render() {
     const { user, accounts } = this.props;
-    const { transactions, transactionsLoading } = this.props.plaid;
+    const transactionsLoading = false;
+    const transactions = [];
 let accountItems = accounts.map(account => (
       <li key={account._id} style={{ marginTop: "1rem" }}>
         <button
@@ -100,22 +94,6 @@ return (
             Add or remove your bank accounts below
           </p>
           <ul>{accountItems}</ul>
-          <PlaidLinkButton
-            buttonProps={{
-              className:
-                "btn btn-large waves-effect waves-light hoverable blue accent-3 main-btn"
-            }}
-            plaidLinkProps={{
-              clientName: "FinTech Mini App",
-              key: "591a992e4c5e1ebe338140cd534293",
-              env: "sandbox",
-              product: ["transactions"],
-              onSuccess: this.handleOnSuccess
-            }}
-            onScriptLoad={() => this.setState({ loaded: true })}
-          >
-            Add Account
-          </PlaidLinkButton>
           <hr style={{ marginTop: "2rem", opacity: ".2" }} />
           <h5>
             <b>Transactions</b>
@@ -153,11 +131,9 @@ Accounts.propTypes = {
 	addAccount: PropTypes.func.isRequired,
 	deleteAccount: PropTypes.func.isRequired,
 	accounts: PropTypes.array.isRequired,
-	plaid: PropTypes.object.isRequired,
 	user: PropTypes.object.isRequired
   };
   const mapStateToProps = state => ({
-	plaid: state.plaid
   });
   
   export default connect(

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import credit_card from "../../img/credit_card.png";
+import credit_card from "../../img/neo_bank.png";
 
 class Landing extends Component {
   componentDidMount() {
@@ -24,7 +24,7 @@ render() {
               alt="Undraw"
             />
             <h4 className="flow-text">
-              <b>Build</b> a personal banking web app with Plaid and the{" "}
+              <b>Build</b> a personal banking web app with Synapse and the{" "}
               <span style={{ fontFamily: "monospace" }}>MERN</span> stack
             </h4>
             <br />

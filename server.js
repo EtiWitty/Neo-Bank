@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 
 const users = require("./routes/api/users");
-//const plaid = require("./server/routes/api/plaid");
+const synapse = require("./routes/api/synapse");
 
 const app = express();
 
@@ -14,6 +14,7 @@ app.use(
     extended: false
   })
 );
+
 app.use(bodyParser.json());
 
 //serve up static assets (on heroku)
@@ -41,7 +42,7 @@ require("./config/passport")(passport);
 
 // Routes
 app.use("/api/users", users);
-// app.use("/api/plaid", plaid);
+app.use("/api/synapse", synapse);
 
 const port = process.env.PORT || 5000;
 

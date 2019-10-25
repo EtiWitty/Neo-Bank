@@ -1,2 +1,4 @@
 node_modules
 server/config/keys.js
+routes/api/secrets.js
+routes/api/secrets.js

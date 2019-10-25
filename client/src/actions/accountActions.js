@@ -9,11 +9,13 @@ import {
   	TRANSACTIONS_LOADING
 } from "./types";
 
+// const Synapse = require('synapsenode'); // ??/
+
 // Add account
-export const addAccount = plaidData => dispatch => {
-	const accounts = plaidData.accounts;
+export const addAccount = synapseData => dispatch => {
+	const accounts = synapseData.accounts;
 	axios
-	  .post("/api/plaid/accounts/add", plaidData)
+	  .post("/api/synapse/accounts/add", synapseData)
 	  .then(res =>
 		dispatch({
 		  type: ADD_ACCOUNT,
@@ -27,14 +29,14 @@ export const addAccount = plaidData => dispatch => {
   };
 
 // Delete account
-export const deleteAccount = plaidData => dispatch => {
+export const deleteAccount = synapseData => dispatch => {
 	if (window.confirm("Are you sure you want to remove this account?")) {
-	  const id = plaidData.id;
-	  const newAccounts = plaidData.accounts.filter(
+	  const id = synapseData.id;
+	  const newAccounts = synapseData.accounts.filter(
 		account => account._id !== id
 	  );
 	  axios
-		.delete(`/api/plaid/accounts/${id}`)
+		.delete(`/api/synapse/accounts/${id}`)
 		.then(res =>
 		  dispatch({
 			type: DELETE_ACCOUNT,
@@ -50,7 +52,7 @@ export const deleteAccount = plaidData => dispatch => {
 export const getAccounts = () => dispatch => {
 	dispatch(setAccountsLoading());
 	axios
-	  .get("/api/plaid/accounts")
+	  .get("/api/synapse/accounts")
 	  .then(res =>
 		dispatch({
 		  type: GET_ACCOUNTS,
@@ -73,10 +75,10 @@ export const getAccounts = () => dispatch => {
   };
 
 // Get Transactions
-export const getTransactions = plaidData => dispatch => {
+export const getTransactions = synapseData => dispatch => {
 	dispatch(setTransactionsLoading());
 	axios
-	  .post("/api/plaid/accounts/transactions", plaidData)
+	  .post("/api/synapse/accounts/transactions", synapseData)
 	  .then(res =>
 		dispatch({
 		  type: GET_TRANSACTIONS,
