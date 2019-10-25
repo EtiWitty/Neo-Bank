@@ -13,11 +13,6 @@ import MaterialTable from "material-table"; // https://mbrn.github.io/material-t
 class Accounts extends Component {
   componentDidMount() {
 
-
-
-
-    // const { accounts } = this.props;
-    const accounts = [];
   }
 
 // Add account
@@ -30,43 +25,56 @@ class Accounts extends Component {
     this.props.logoutUser();
   };
 render() {
-    const transactionsLoading = false;
-    const transactions = [];
-    const accounts = [];
+    // const transactionsLoading = false;
+    // const transactions = [];
     const { user } = this.props.auth;
+    const { accounts } = this.props;
+    console.log({accounts});
 
-let accountItems = accounts.map(account => (
-      <li key={account._id} style={{ marginTop: "1rem" }}>
-        <button
-          style={{ marginRight: "1rem" }}
-          onClick={this.onDeleteClick.bind(this, account._id)}
-          className="btn btn-small btn-floating waves-effect waves-light hoverable red accent-3"
-        >
-          <i className="material-icons">delete</i>
-        </button>
-        <b>{account.institutionName}</b>
-      </li>
-    ));
 
 // Setting up data table
-    const transactionsColumns = [
-      { title: "Account", field: "account" },
-      { title: "Date", field: "date", type: "date", defaultSort: "desc" },
-      { title: "Name", field: "name" },
-      { title: "Amount", field: "amount" },
-      { title: "Category", field: "category" }
+    const accountsColumns = [
+      { title: "Name", field: "name"},
+      { title: "Email", field: "email" },
+      { title: "ID", field: "id" },
+      { title: "DOCS", field: "docs" },
+      { title: "PERMISSION", field: "permission" },
+      { title: "DOC PERMISSION", field: "doc_permission" },
+      { title: "CREATED", field: "created" },
+      { title: "LAST UPDATE", field: "last_updated" },
+      // { title: "Date", field: "date", type: "date", defaultSort: "desc" },
+      // { title: "Amount", field: "amount" },
+      // { title: "Category", field: "category" }
     ];
-let transactionsData = [];
-    transactions.forEach(function(account) {
-      account.transactions.forEach(function(transaction) {
-        transactionsData.push({
-          account: account.accountName,
-          date: transaction.date,
-          category: transaction.category[0],
-          name: transaction.name,
-          amount: transaction.amount
+    let accountsData = [];
+      accounts.forEach(function(account) {
+        console.log({account});
+        const getDateString = (timestamp) => {
+          return (new Date(timestamp)+"").split(" GMT")[0];
+        }
+        const getDocs = (document) => {
+          const getDocsFromType = (docs) => {
+            docs = docs || [];
+            return docs.map(doc => doc.document_type).join(",");
+          }
+
+          return [
+            getDocsFromType(document.physical_docs),
+            getDocsFromType(document.social_docs),
+            getDocsFromType(document.veritual_docs)
+          ].join(" | ");
+        }
+
+        accountsData.push({
+          name: account.legal_names.join(""),
+          email: account.logins[0].email,
+          id: account._id,
+          docs: getDocs(account.documents[0]),
+          permission: account.permission,
+          doc_permission: account.documents[0].permission_scope,
+          created: getDateString(account.extra.date_joined),
+          last_updated: getDateString(account.extra.last_updated),
         });
-      });
     });
 return (
       <div className="row">
@@ -84,13 +92,24 @@ return (
             Hey there, {user.name.split(" ")[0]}
           </p>
           <h5>
-            <b>Linked Accounts</b>
+            <b>Available Accounts</b>
           </h5>
           <p className="grey-text text-darken-1">
-            Add or remove your bank accounts below
+            Below are the accounts created in Synapse:
           </p>
-          <ul>{accountItems}</ul>
-          <hr style={{ marginTop: "2rem", opacity: ".2" }} />
+          <MaterialTable
+              columns={accountsColumns}
+              data={accountsData}
+              title="Accounts"
+              options={{
+                headerStyle: {
+                  backgroundColor: '#01579b',
+                  color: '#FFF'
+                }
+              }}
+            />
+          {/* <ul>{accountItems}</ul> */}
+          {/* <hr style={{ marginTop: "2rem", opacity: ".2" }} />
           <h5>
             <b>Transactions</b>
           </h5>
@@ -114,7 +133,7 @@ return (
                 title="Search Transactions"
               />
             </>
-          )}
+          )} */}
         </div>
       </div>
     );
