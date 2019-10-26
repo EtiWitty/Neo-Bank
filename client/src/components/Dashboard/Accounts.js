@@ -1,13 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
-import {
-  getTransactions,
-  addAccount,
-  deleteAccount
-} from "../../actions/accountActions";
-import { logoutUser } from "../../actions/authActions";
 import MaterialTable from "material-table"; // https://mbrn.github.io/material-table/#/
 
 class Accounts extends Component {
@@ -24,9 +17,8 @@ class Accounts extends Component {
     e.preventDefault();
     this.props.logoutUser();
   };
+  
 render() {
-    // const transactionsLoading = false;
-    // const transactions = [];
     const { user } = this.props.auth;
     const { accounts } = this.props;
     console.log({accounts});
@@ -42,9 +34,6 @@ render() {
       { title: "DOC PERMISSION", field: "doc_permission" },
       { title: "CREATED", field: "created" },
       { title: "LAST UPDATE", field: "last_updated" },
-      // { title: "Date", field: "date", type: "date", defaultSort: "desc" },
-      // { title: "Amount", field: "amount" },
-      // { title: "Category", field: "category" }
     ];
     let accountsData = [];
       accounts.forEach(function(account) {
@@ -108,32 +97,6 @@ return (
                 }
               }}
             />
-          {/* <ul>{accountItems}</ul> */}
-          {/* <hr style={{ marginTop: "2rem", opacity: ".2" }} />
-          <h5>
-            <b>Transactions</b>
-          </h5>
-          {transactionsLoading ? (
-            <p className="grey-text text-darken-1">Fetching transactions...</p>
-          ) : (
-            <>
-              <p className="grey-text text-darken-1">
-                You have <b>{transactionsData.length}</b> transactions from your
-                <b> {accounts.length}</b> linked
-                {accounts.length > 1 ? (
-                  <span> accounts </span>
-                ) : (
-                  <span> account </span>
-                )}
-                from the past 30 days
-              </p>
-              <MaterialTable
-                columns={transactionsColumns}
-                data={transactionsData}
-                title="Search Transactions"
-              />
-            </>
-          )} */}
         </div>
       </div>
     );

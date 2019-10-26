@@ -18,6 +18,7 @@
     "build": "^0.1.4",
     "concurrently": "^4.0.1",
     "express": "^4.16.4",
+    "heroku": "^7.33.3",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.3.0",
     "moment": "^2.24.0",

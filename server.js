@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
+// const path = require("path");
 
 const users = require("./routes/api/users");
 const synapse = require("./routes/api/synapse");
@@ -20,6 +21,10 @@ app.use(bodyParser.json());
 //serve up static assets (on heroku)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
+
+  // app.use("*", (req, res) => {
+  //   res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  // });
 }
 
 // DB Config

@@ -9,8 +9,6 @@ import {
   	TRANSACTIONS_LOADING
 } from "./types";
 
-// const Synapse = require('synapsenode'); // ??/
-
 // Add account
 export const addAccount = synapseData => dispatch => {
 	const accounts = synapseData.accounts;
