@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import MaterialTable from "material-table"; // https://mbrn.github.io/material-table/#/
+import { logoutUser } from "../../actions/authActions";
 
 class Accounts extends Component {
   componentDidMount() {
@@ -17,7 +18,7 @@ class Accounts extends Component {
     e.preventDefault();
     this.props.logoutUser();
   };
-  
+
 render() {
     const { user } = this.props.auth;
     const { accounts } = this.props;
@@ -112,5 +113,6 @@ const mapStateToProps = state => ({
 });
   
 export default connect(
-	mapStateToProps,
+  mapStateToProps,
+  { logoutUser }
 )(Accounts);
